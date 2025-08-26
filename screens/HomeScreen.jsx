@@ -11,6 +11,7 @@ import Card from "../components/Card";
 export default function HomeScreen() {
     const [lista, setLista] = useState([])
     const [novaTarefa, setNovaTarefa] = useState("")
+    const [busca, setBusca] = useState("")
 
     function cadastrarTarefa() {
         let aux =  [
@@ -36,20 +37,16 @@ export default function HomeScreen() {
     }
 
     function concluirTarefa(index) {
-        // cria uma cópia da lista
         let aux = [...lista]
-
-        // alterna o booleano de concluído
         aux[index].concluido = !aux[index].concluido
-
-        // atualiza o estado
         setLista(aux)
     }
 
 
     function excluirTarefa(index) {
         // Remove o item da lista pelo índice
-        const aux = lista.filter((_, i) => i !== index)
+        let aux = [...lista]
+        aux.splice(index, 1)
         setLista(aux)
     }
 
@@ -63,19 +60,27 @@ export default function HomeScreen() {
                 <BtnCont text={"Tarefas Criadas"} num={numTarefasAtivas()} />
                 <BtnCont text={"Concluídas"} num={numTarefasConcluidas()} isGreen={true}/>
             </View>
-            <Search />
+            <Search texto={busca} setTexto={setBusca} />
 
             {lista.length === 0 && <EmptyList />}
 
-            {lista.map((item, index) => (
-                <Card
-                    key={index}
-                    texto={item.tarefa}
-                    concluido={item.concluido}
-                    fnConcluir={() => concluirTarefa(index)}
-                    fnExcluir={() => excluirTarefa(index)}
-                />
-            ))}
+            {lista
+                .sort((a, b) => a.concluido - b.concluido)
+                .map((item, index) => {
+                    if (item.tarefa.toLowerCase().includes(busca.toLowerCase())) {
+                        return (
+                            <Card
+                                key={index}
+                                texto={item.tarefa}
+                                concluido={item.concluido}
+                                fnConcluir={() => concluirTarefa(index)}
+                                fnExcluir={() => excluirTarefa(index)}
+                            />
+                        )
+                    }
+                    return null
+            })}
+
 
 
         </ScrollView>

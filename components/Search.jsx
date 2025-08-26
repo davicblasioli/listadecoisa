@@ -1,9 +1,9 @@
 import {StyleSheet, TextInput, View} from 'react-native'
 import colors from "../design/colors";
-export default function Search() {
+export default function Search({texto, setTexto}) {
     return (
         <>
-            <TextInput style={styles.input} placeholder={'Busque por tarefas'} />
+            <TextInput style={styles.input} placeholder={'Busque por tarefas'} value={texto} onChangeText={setTexto} />
         </>
     )
 }
