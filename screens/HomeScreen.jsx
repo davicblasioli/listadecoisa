@@ -36,12 +36,23 @@ export default function HomeScreen() {
     }
 
     function concluirTarefa(index) {
+        // cria uma cópia da lista
+        let aux = [...lista]
 
+        // alterna o booleano de concluído
+        aux[index].concluido = !aux[index].concluido
+
+        // atualiza o estado
+        setLista(aux)
     }
+
 
     function excluirTarefa(index) {
-        
+        // Remove o item da lista pelo índice
+        const aux = lista.filter((_, i) => i !== index)
+        setLista(aux)
     }
+
 
     return (
         <ScrollView>
@@ -56,12 +67,17 @@ export default function HomeScreen() {
 
             {lista.length === 0 && <EmptyList />}
 
-            {lista.map((item, index) => (<Card key={index} texto={item.tarefa} concluido={item.concluido} />))}
+            {lista.map((item, index) => (
+                <Card
+                    key={index}
+                    texto={item.tarefa}
+                    concluido={item.concluido}
+                    fnConcluir={() => concluirTarefa(index)}
+                    fnExcluir={() => excluirTarefa(index)}
+                />
+            ))}
 
 
-            <Card texto={"Estudar para a prova"} />
-            <Card texto={"Limpar a casa"} />
-            <Card texto={"Lavar a louça"} concluido={true}/>
         </ScrollView>
     )
 }
